@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Inventory Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #a6d9ff, #d3c7ff);
+        }
+
+        .container {
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 30px;
+            width: 80%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            button:hover {
+                transform: scale(1.05);
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Products in Location</h1>
+        <table id="productTable" border="1">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Serial Number</th>
+                    <th>Quantity</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <button id="completeInventoryButton">Complete Inventory</button>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const locationId = urlParams.get("locationId");
+        const updatedProducts = [];
+
+        fetch(`api/InputModule/GetProductsByLocation/GetProductsByLocation/${locationId}`)
+            .then(response => response.json())
+            .then(products => {
+                const tbody = document.querySelector("#productTable tbody");
+                products.forEach(product => {
+                    const row = document.createElement("tr");
+                    row.dataset.itemId = product.itemId;
+
+                    row.innerHTML = `
+                                <td>${product.name}</td>
+                                <td><input type="text" value="${product.serialNumber}" data-field="serialNumber"></td>
+                                <td><input type="number" value="${product.quantity}" data-field="quantity"></td>
+                                <td>
+                                    <select data-field="locationId">
+                                        <option value="${product.locationId}" selected>${product.locationName}</option>
+                                    </select>
+                                </td>
+                            `;
+
+                    tbody.appendChild(row);
+
+                    fetch(`api/InputModule/GetLocationsByType/GetLocationsByType/${product.type}`)
+                        .then(response => response.json())
+                        .then(locations => {
+                            const select = row.querySelector("select[data-field='locationId']");
+                            locations.forEach(location => {
+                                if (location.locationId !== product.locationId) {
+                                    const option = document.createElement("option");
+                                    option.value = location.locationId;
+                                    option.textContent = location.locationName;
+                                    select.appendChild(option);
+                                }
+                            });
+                        });
+
+                    row.querySelectorAll("input, select").forEach(field => {
+                        field.addEventListener("change", () => {
+                            const itemId = row.dataset.itemId;
+                            const serialNumber = row.querySelector("input[data-field='serialNumber']").value;
+                            const quantity = parseInt(row.querySelector("input[data-field='quantity']").value, 10);
+                            const locationId = parseInt(row.querySelector("select[data-field='locationId']").value, 10);
+
+                            const existing = updatedProducts.find(p => p.itemId === itemId);
+                            if (existing) {
+                                existing.serialNumber = serialNumber;
+                                existing.quantity = quantity;
+                                existing.locationId = locationId;
+                            } else {
+                                updatedProducts.push({ itemId, serialNumber, quantity, locationId });
+                            }
+                        });
+                    });
+                });
+            })
+            .catch(error => console.error("Error fetching products:", error));
+
+        document.getElementById("completeInventoryButton").addEventListener("click", () => {
+            fetch("api/InputModule/UpdateInventory/UpdateInventory", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedProducts)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    const queryParams = new URLSearchParams({
+                        locationId: locationId,
+                        changes: JSON.stringify(result.changes),
+                        message: result.message
+                    }).toString();
+
+                    window.location.href = `inventory-report.html?${queryParams}`;
+                })
+                .catch(error => console.error("Error updating inventory:", error));
+        });
+    </script>
+</body>
+</html>

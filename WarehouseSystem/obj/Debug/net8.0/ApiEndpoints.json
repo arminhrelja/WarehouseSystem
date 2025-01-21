@@ -1,0 +1,155 @@
+[
+  {
+    "ContainingType": "WarehouseSystem.Controllers.InputModuleController",
+    "Method": "AddItem",
+    "RelativePath": "api/InputModule/AddItem",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "itemLocation",
+        "Type": "WarehouseSystem.Models.ItemLocation",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseSystem.Controllers.InputModuleController",
+    "Method": "CompleteOrder",
+    "RelativePath": "api/InputModule/CompleteOrder/CompleteOrder",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pickedItems",
+        "Type": "System.Collections.Generic.List\u00601[[WarehouseSystem.Controllers.InputModuleController\u002BOrderCompletionDto, WarehouseSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseSystem.Controllers.InputModuleController",
+    "Method": "GetAvailableLocations",
+    "RelativePath": "api/InputModule/GetAvailableLocations/get-available-locations/{type}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "type",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseSystem.Controllers.InputModuleController",
+    "Method": "GetItemsWithLocations",
+    "RelativePath": "api/InputModule/GetItemsWithLocations/items-with-locations",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseSystem.Controllers.InputModuleController",
+    "Method": "GetLocationById",
+    "RelativePath": "api/InputModule/GetLocationById/GetLocationById/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseSystem.Controllers.InputModuleController",
+    "Method": "GetLocationsByType",
+    "RelativePath": "api/InputModule/GetLocationsByType/GetLocationsByType/{type}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "type",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseSystem.Controllers.InputModuleController",
+    "Method": "GetOrder",
+    "RelativePath": "api/InputModule/GetOrder/GetOrder",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseSystem.Controllers.InputModuleController",
+    "Method": "GetProductsByLocation",
+    "RelativePath": "api/InputModule/GetProductsByLocation/GetProductsByLocation/{locationId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "locationId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseSystem.Controllers.InputModuleController",
+    "Method": "UpdateInventory",
+    "RelativePath": "api/InputModule/UpdateInventory/UpdateInventory",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "updates",
+        "Type": "System.Collections.Generic.List\u00601[[WarehouseSystem.Controllers.InputModuleController\u002BInventoryUpdateDto, WarehouseSystem, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WarehouseSystem.Controllers.InputModuleController",
+    "Method": "UpdateItem",
+    "RelativePath": "api/InputModule/UpdateItem/update-item/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "updatedItem",
+        "Type": "WarehouseSystem.Models.Item",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

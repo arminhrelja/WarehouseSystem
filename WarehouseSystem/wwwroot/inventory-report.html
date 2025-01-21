@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Inventory Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #a6d9ff, #d3c7ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        tr td {
+            color: #333;
+        }
+
+        tr.changed-row td {
+            background-color: #fff3cd;
+            font-weight: bold;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight:bold;
+            cursor: pointer;
+            width: 150px;
+            transition: all 0.3s ease;
+        }
+
+            button:hover {
+                background-color: white;
+                transform: scale(1.05);
+                color: #0056b3;
+                border: 2px solid #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Inventory Report</h1>
+        <div id="successMessage" class="success-message"></div>
+        <table id="reportTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Serial Number</th>
+                    <th>Quantity</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div class="buttons-container">
+            <button id="printButton">Print</button>
+            <button id="finishButton">Finish</button>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const locationId = urlParams.get("locationId");
+        const changes = JSON.parse(urlParams.get("changes") || "[]");
+        const successMessage = urlParams.get("message");
+
+        document.getElementById("successMessage").textContent = successMessage;
+
+        fetch(`api/InputModule/GetProductsByLocation/GetProductsByLocation/${locationId}`)
+            .then(response => response.json())
+            .then(products => {
+                const tbody = document.querySelector("#reportTable tbody");
+
+                products.forEach(product => {
+                    const isChanged = changes.some(change => change.itemId === product.itemId);
+                    const changeDetails = changes.find(change => change.itemId === product.itemId);
+                    const newLocationName = changeDetails ? changeDetails.newLocationName : product.locationName;
+
+                    const row = document.createElement("tr");
+                    if (isChanged) row.classList.add("changed-row");
+
+                    row.innerHTML = `
+                            <td>${product.name}</td>
+                            <td>${isChanged ? changeDetails.serialNumber : product.serialNumber}</td>
+                            <td>${isChanged ? changeDetails.quantity : product.quantity}</td>
+                            <td>${isChanged ? newLocationName : product.locationName}</td>
+                            <td>${isChanged ? "Changed" : "Unchanged"}</td>
+                        `;
+
+                    tbody.appendChild(row);
+                });
+            })
+            .catch(error => console.error("Error fetching products for report:", error));
+
+        document.getElementById("finishButton").addEventListener("click", () => {
+            window.location.href = "index.html";
+        });
+
+        document.getElementById("printButton").addEventListener("click", () => {
+            window.print();
+        });
+    </script>
+</body>
+</html>

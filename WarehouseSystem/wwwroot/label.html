@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Label Preview</title>
+    <style>
+
+
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(135deg, #a6d9ff, #d3c7ff);
+        }
+
+        .label {
+            border: 3px dashed #000;
+            padding: 30px;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 400px;
+            margin-bottom: 20px;
+        }
+
+            .label img {
+                display: block;
+                margin: 0 auto 20px;
+                width: 120px;
+                height: 120px;
+            }
+
+            .label h3 {
+                margin: 0 0 20px;
+                font-size: 1.8rem; /* Veći naslov */
+            }
+
+            .label p {
+                margin: 10px 0;
+                font-size: 1.2rem; /* Veći tekst */
+            }
+
+        button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <div class="label">
+        <img src="qr-code-placeholder.png" alt="QR Code">
+ 
+        <p><strong>Name:</strong> <span id="name"></span></p>
+        <p><strong>Serial Number:</strong> <span id="serialNumber"></span></p>
+        <p><strong>Quantity:</strong> <span id="quantity"></span></p>
+        <p><strong>Expiration Date:</strong> <span id="expirationDate"></span></p>
+        <p><strong>Type:</strong> <span id="type"></span></p>
+        <p><strong>Location:</strong> <span id="locationName">Loading...</span></p>
+    </div>
+    <button id="printButton">Print Label</button>
+
+    <script>
+        // Preuzimanje parametara iz URL-a
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("name").textContent = urlParams.get("name");
+        document.getElementById("serialNumber").textContent = urlParams.get("serialNumber");
+        document.getElementById("quantity").textContent = urlParams.get("quantity");
+
+        // Formatiranje datuma za prikaz samo datuma (bez vremena)
+        const expirationDate = urlParams.get("expirationDate");
+        if (expirationDate) {
+            const formattedDate = new Date(expirationDate).toISOString().split("T")[0];
+            document.getElementById("expirationDate").textContent = formattedDate;
+        } else {
+            document.getElementById("expirationDate").textContent = "No expiration date provided.";
+        }
+
+        document.getElementById("type").textContent = urlParams.get("type");
+
+        // Dohvatanje lokacije iz baze na osnovu locationId
+        const locationId = urlParams.get("locationId");
+        if (locationId) {
+            fetch(`api/InputModule/GetLocationById/GetLocationById/${locationId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch location.");
+                    }
+                    return response.json();
+                })
+                .then(location => {
+                    document.getElementById("locationName").textContent = location.locationName;
+                })
+                .catch(error => {
+                    console.error(error);
+                    document.getElementById("locationName").textContent = "Error loading location.";
+                });
+        } else {
+            document.getElementById("locationName").textContent = "No location specified.";
+        }
+
+        document.getElementById("printButton").addEventListener("click", () => {
+            window.print();
+        });
+    </script>
+</body>
+</html>

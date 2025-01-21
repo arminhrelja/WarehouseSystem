@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Process Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #a6d9ff, #d3c7ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        h1, h2 {
+            color: #000;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            text-align: center; /* Centriranje podataka u tabeli */
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #007BFF; /* Plava pozadina za zaglavlja */
+            color: white; /* Bijeli tekst za zaglavlja */
+        }
+
+        button {
+            padding: 15px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            width: 50%; /* Širina dugmeta 80% containera */
+            margin: 0 auto; /* Centriranje dugmeta */
+            display: block; /* Centriranje dugmeta */
+            box-sizing: border-box;
+        }
+
+            button:hover {
+                background-color: white;
+                color: #0056b3;
+                border: 2px solid #0056b3;
+            }
+
+        #startOrderButton {
+            margin-top: 10px;
+        }
+
+        #successModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #successModal p {
+            font-size:20px;
+        }
+
+        #successButton {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            #successButton:hover {
+                background-color: white;
+                color: #0056b3;
+                border: 2px solid #0056b3;
+            }
+
+        .pickCheckbox {
+            width: 20px; /* Povećana širina checkboxa */
+            height: 20px; /* Povećana visina checkboxa */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Process Orders</h1>
+        <div id="orderDetails">
+            <h2>Order Details</h2>
+            <table id="orderTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Serial Number</th>
+                        <th>Quantity Ordered</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="startOrderButton">Start Order</button>
+        </div>
+        <div id="pickItems" style="display: none;">
+            <h2>Pick Items</h2>
+            <table id="pickTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Serial Number</th>
+                        <th>Location</th>
+                        <th>Quantity to Pick</th>
+                        <th>Picked</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div id="errorContainer" style="color: red; margin:20px 0 20px 0; font-size:20px;"></div>
+            <button id="completeOrderButton">Complete</button>
+            <div id="successModal">
+                <h2>Order Completed</h2>
+                <p>Your order has been successfully processed!</p>
+                <button id="successButton">OK</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let orderProducts = [];
+
+        // Step 1: Fetch order details
+        fetch("api/InputModule/GetOrder/GetOrder")
+            .then(response => response.json())
+            .then(order => {
+                const tbody = document.querySelector("#orderTable tbody");
+                orderProducts = order.products;
+                order.products.forEach(product => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                                    <td>${product.name}</td>
+                                    <td>${product.serialNumber}</td>
+                                    <td>${product.quantityOrdered}</td>
+                                `;
+                    tbody.appendChild(row);
+                });
+            })
+            .catch(error => console.error("Error fetching order:", error));
+
+        // Step 2: Start Order
+        document.getElementById("startOrderButton").addEventListener("click", () => {
+            document.getElementById("orderDetails").style.display = "none";
+            document.getElementById("pickItems").style.display = "block";
+
+            const tbody = document.querySelector("#pickTable tbody");
+            tbody.innerHTML = ""; // Resetovanje tabele
+
+            orderProducts.forEach(product => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                        <td>${product.name}</td>
+                        <td>${product.serialNumber}</td>
+                        <td>${product.locationName}</td>
+                        <td>${product.quantityOrdered}</td>
+                        <td>
+                            <input type="checkbox"
+                                   class="pickCheckbox"
+                                   data-item-id="${product.itemId}"
+                                   data-quantity-ordered="${product.quantityOrdered}">
+                        </td>
+                    `;
+                tbody.appendChild(row);
+            });
+        });
+
+        // Step 3: Complete Order
+        document.getElementById("completeOrderButton").addEventListener("click", async () => {
+            const errorContainer = document.getElementById("errorContainer");
+            const successModal = document.getElementById("successModal");
+            const successButton = document.getElementById("successButton");
+            errorContainer.textContent = ""; // Resetovanje poruka o greškama
+
+            const pickedItems = Array.from(document.querySelectorAll(".pickCheckbox:checked")).map(checkbox => ({
+                itemId: parseInt(checkbox.dataset.itemId, 10),
+                quantityOrdered: parseInt(checkbox.dataset.quantityOrdered, 10)
+            }));
+
+            if (pickedItems.length !== orderProducts.length) {
+                errorContainer.textContent = "Not all items have been picked! Please complete picking all items.";
+                return;
+            }
+
+            try {
+                console.log("Sending JSON payload:", JSON.stringify(pickedItems)); // Provera JSON podataka
+
+                const response = await fetch("api/InputModule/CompleteOrder/CompleteOrder", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(pickedItems)
+                });
+
+                if (response.ok) {
+                    // Prikazujemo modalni prozor
+                    successModal.style.display = "block";
+
+                    // Dodajemo funkcionalnost za OK dugme
+                    successButton.addEventListener("click", () => {
+                        window.location.href = "index.html"; // Povratak na početnu stranicu
+                    });
+                } else {
+                    const error = await response.json();
+                    console.error("Error:", error.message);
+                    errorContainer.textContent = `Error: ${error.message}`;
+                }
+            } catch (error) {
+                console.error("Unexpected error:", error);
+                errorContainer.textContent = "An unexpected error occurred. Please try again.";
+            }
+        });
+
+    </script>
+</body>
+</html>

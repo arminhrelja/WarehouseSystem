@@ -1,0 +1,61 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Hemdator\\Desktop\\WarehouseSystem - v4\\WarehouseSystem\\wwwroot\\create-label.html",
+      "PackagePath": "staticwebassets\\create-label.html"
+    },
+    {
+      "Id": "C:\\Users\\Hemdator\\Desktop\\WarehouseSystem - v4\\WarehouseSystem\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\Hemdator\\Desktop\\WarehouseSystem - v4\\WarehouseSystem\\wwwroot\\inventory-locations.html",
+      "PackagePath": "staticwebassets\\inventory-locations.html"
+    },
+    {
+      "Id": "C:\\Users\\Hemdator\\Desktop\\WarehouseSystem - v4\\WarehouseSystem\\wwwroot\\inventory-products.html",
+      "PackagePath": "staticwebassets\\inventory-products.html"
+    },
+    {
+      "Id": "C:\\Users\\Hemdator\\Desktop\\WarehouseSystem - v4\\WarehouseSystem\\wwwroot\\inventory-report.html",
+      "PackagePath": "staticwebassets\\inventory-report.html"
+    },
+    {
+      "Id": "C:\\Users\\Hemdator\\Desktop\\WarehouseSystem - v4\\WarehouseSystem\\wwwroot\\inventory.html",
+      "PackagePath": "staticwebassets\\inventory.html"
+    },
+    {
+      "Id": "C:\\Users\\Hemdator\\Desktop\\WarehouseSystem - v4\\WarehouseSystem\\wwwroot\\label.html",
+      "PackagePath": "staticwebassets\\label.html"
+    },
+    {
+      "Id": "C:\\Users\\Hemdator\\Desktop\\WarehouseSystem - v4\\WarehouseSystem\\wwwroot\\orders.html",
+      "PackagePath": "staticwebassets\\orders.html"
+    },
+    {
+      "Id": "C:\\Users\\Hemdator\\Desktop\\WarehouseSystem - v4\\WarehouseSystem\\wwwroot\\qr-code-placeholder.png",
+      "PackagePath": "staticwebassets\\qr-code-placeholder.png"
+    },
+    {
+      "Id": "C:\\Users\\Hemdator\\Desktop\\WarehouseSystem - v4\\WarehouseSystem\\wwwroot\\warehouse-background.jpg",
+      "PackagePath": "staticwebassets\\warehouse-background.jpg"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.WarehouseSystem.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.WarehouseSystem.props",
+      "PackagePath": "build\\WarehouseSystem.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.WarehouseSystem.props",
+      "PackagePath": "buildMultiTargeting\\WarehouseSystem.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.WarehouseSystem.props",
+      "PackagePath": "buildTransitive\\WarehouseSystem.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

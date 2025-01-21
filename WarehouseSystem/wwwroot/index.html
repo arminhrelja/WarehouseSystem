@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            text-align: center;
+            background: linear-gradient(135deg, #a6d9ff, #d3c7ff);
+            color: #2c3e50;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+        }
+
+            .container img {
+                max-width: 80%; /* Postavlja sliku da zauzima 80% širine containera */
+                height: 150px; /* Održava proporcije slike */
+                margin-bottom: 10px; /* Razmak ispod slike */
+            }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 40px; /* Veći razmak od dugmadi */
+        }
+
+        button {
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #3498db;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: 50%; /* Fiksna širina dugmadi */
+            box-sizing: border-box;
+        }
+
+            button:hover {
+                background-color: #2980b9;
+                transform: scale(1.05);
+            }
+
+            button:active {
+                background-color: #1c5d85;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Slika dodata ovde -->
+        <img src="background-image.png" alt="Warehouse Illustration" />
+        <h1>Warehouse Management System</h1>
+        <button onclick="location.href='create-label.html'">Create Label</button>
+        <button onclick="location.href='inventory.html'">Start Inventory</button>
+        <button onclick="location.href='orders.html'">Process Orders</button>
+    </div>
+</body>
+</html>
